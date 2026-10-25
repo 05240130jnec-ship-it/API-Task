@@ -1,66 +1,80 @@
-const API = 'http://localhost:3000/tasks';
+const API = 'http://localhost:3000/books';
 
-const taskInput = document.getElementById('taskInput');
+const titleInput = document.getElementById('titleInput');
+const authorInput = document.getElementById('authorInput');
 const addBtn = document.getElementById('addBtn');
-const taskList = document.getElementById('taskList');
+const bookList = document.getElementById('bookList');
 const message = document.getElementById('message');
 
 function showMessage(text) {
   message.textContent = text;
 }
 
-// GET /tasks - load and display all tasks
-async function loadTasks() {
+// GET /books - load and display all books
+async function loadBooks() {
   try {
     const res = await fetch(API);
-    if (!res.ok) throw new Error('Could not load tasks');
-    const tasks = await res.json();
-    renderTasks(tasks);
+    if (!res.ok) throw new Error('Could not load books');
+    const books = await res.json();
+    renderBooks(books);
     showMessage('');
   } catch (err) {
     showMessage('Cannot reach the server. Is the backend running?');
   }
 }
 
-function renderTasks(tasks) {
-  taskList.innerHTML = '';
+function renderBooks(books) {
+  bookList.innerHTML = '';
 
-  if (tasks.length === 0) {
+  if (books.length === 0) {
     const empty = document.createElement('li');
-    empty.textContent = 'No tasks yet.';
-    taskList.appendChild(empty);
+    empty.textContent = 'No books yet.';
+    bookList.appendChild(empty);
     return;
   }
 
-  tasks.forEach((task) => {
+  books.forEach((book) => {
     const li = document.createElement('li');
-    // MySQL returns completed as 1 or 0, so convert it to a real boolean
-    const isDone = Boolean(task.completed);
-    if (isDone) li.classList.add('done');
+    // MySQL returns finished as 1 or 0, so convert it to a real boolean
+    const isFinished = Boolean(book.finished);
+    if (isFinished) li.classList.add('done');
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    checkbox.checked = isDone;
-    checkbox.addEventListener('change', () => toggleTask(task.id, checkbox.checked));
+    checkbox.checked = isFinished;
+    checkbox.title = 'Mark as finished';
+    checkbox.addEventListener('change', () => toggleBook(book.id, checkbox.checked));
+
+    const info = document.createElement('div');
+    info.className = 'book-info';
 
     const title = document.createElement('span');
-    title.textContent = task.title;
+    title.className = 'book-title';
+    title.textContent = book.title;
+
+    const author = document.createElement('span');
+    author.className = 'book-author';
+    author.textContent = book.author || 'Unknown author';
+
+    info.append(title, author);
 
     const delBtn = document.createElement('button');
     delBtn.textContent = 'Delete';
     delBtn.className = 'delete-btn';
-    delBtn.addEventListener('click', () => deleteTask(task.id));
+    delBtn.addEventListener('click', () => deleteBook(book.id));
 
-    li.append(checkbox, title, delBtn);
-    taskList.appendChild(li);
+    li.append(checkbox, info, delBtn);
+    bookList.appendChild(li);
   });
 }
 
-// POST /tasks - create a task
-async function addTask() {
-  const title = taskInput.value.trim();
+// POST /books - add a book
+async function addBook() {
+  const title = titleInput.value.trim();
+  const author = authorInput.value.trim();
+
   if (!title) {
-    showMessage('Please enter a task title.');
+    showMessage('Please enter a book title.');
     return;
   }
 
@@ -68,48 +82,49 @@ async function addTask() {
     const res = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title }),
+      body: JSON.stringify({ title, author }),
     });
     if (!res.ok) {
       const data = await res.json();
-      throw new Error(data.error || 'Could not add task');
+      throw new Error(data.error || 'Could not add book');
     }
-    taskInput.value = '';
-    loadTasks();
+    titleInput.value = '';
+    authorInput.value = '';
+    loadBooks();
   } catch (err) {
     showMessage(err.message);
   }
 }
 
-// PATCH /tasks/:id - mark complete or incomplete
-async function toggleTask(id, completed) {
+// PATCH /books/:id - mark finished or not finished
+async function toggleBook(id, finished) {
   try {
     const res = await fetch(`${API}/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ completed }),
+      body: JSON.stringify({ finished }),
     });
-    if (!res.ok) throw new Error('Could not update task');
-    loadTasks();
+    if (!res.ok) throw new Error('Could not update book');
+    loadBooks();
   } catch (err) {
     showMessage(err.message);
   }
 }
 
-// DELETE /tasks/:id - remove a task
-async function deleteTask(id) {
+// DELETE /books/:id - remove a book
+async function deleteBook(id) {
   try {
     const res = await fetch(`${API}/${id}`, { method: 'DELETE' });
-    if (!res.ok) throw new Error('Could not delete task');
-    loadTasks();
+    if (!res.ok) throw new Error('Could not delete book');
+    loadBooks();
   } catch (err) {
     showMessage(err.message);
   }
 }
 
-addBtn.addEventListener('click', addTask);
-taskInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') addTask();
+addBtn.addEventListener('click', addBook);
+titleInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') addBook();
 });
 
-loadTasks();
+loadBooks();

@@ -10,7 +10,7 @@ body {
 }
 
 .container {
-  max-width: 520px;
+  max-width: 600px;
   margin: 0 auto;
   background: #ffffff;
   padding: 24px;
@@ -24,13 +24,15 @@ h1 {
   color: #1e293b;
 }
 
-.add-task {
+.add-book {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
-.add-task input {
+.add-book input {
   flex: 1;
+  min-width: 140px;
   padding: 10px;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
@@ -71,11 +73,23 @@ li {
   border-bottom: 1px solid #e2e8f0;
 }
 
-li span {
+.book-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-li.done span {
+.book-title {
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.book-author {
+  font-size: 14px;
+  color: #64748b;
+}
+
+li.done .book-title {
   text-decoration: line-through;
   color: #94a3b8;
 }
