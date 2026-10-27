@@ -2,7 +2,7 @@
   "name": "book-library-api",
   "version": "1.0.0",
   "description": "Book Library REST API with MySQL and a simple frontend",
-  "main": "server-mvc.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
