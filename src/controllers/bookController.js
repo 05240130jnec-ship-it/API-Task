@@ -1,4 +1,4 @@
-const bookModel = require('../../backend/src/models/bookModel');
+const bookModel = require('../models/bookModel');
 
 const bookController = {
   getAllBooks: async (req, res, next) => {
@@ -24,7 +24,7 @@ const bookController = {
 
   createBook: async (req, res, next) => {
     try {
-      const { title, author, finished = false } = req.body;
+      const { title, author, finished = false } = req.body || {};
       if (typeof title !== 'string' || title.trim() === '') {
         return res.status(400).json({ error: 'Title is required' });
       }
@@ -33,7 +33,7 @@ const bookController = {
       }
       const book = await bookModel.create({
         title: title.trim(),
-        author: typeof author === 'string' ? author.trim() : null,
+        author: typeof author === 'string' && author.trim() !== '' ? author.trim() : null,
         finished,
       });
       res.status(201).json(book);
@@ -45,7 +45,7 @@ const bookController = {
   updateBook: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const { title, author, finished } = req.body;
+      const { title, author, finished } = req.body || {};
       if (typeof title !== 'string' || title.trim() === '') {
         return res.status(400).json({ error: 'Title is required' });
       }
@@ -54,7 +54,7 @@ const bookController = {
       }
       const book = await bookModel.update(id, {
         title: title.trim(),
-        author: typeof author === 'string' ? author.trim() : null,
+        author: typeof author === 'string' && author.trim() !== '' ? author.trim() : null,
         finished,
       });
       if (!book) {
@@ -69,7 +69,7 @@ const bookController = {
   patchBook: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const { title, author, finished } = req.body;
+      const { title, author, finished } = req.body || {};
       if (title === undefined && author === undefined && finished === undefined) {
         return res.status(400).json({ error: 'Provide at least one field to update' });
       }
@@ -81,7 +81,7 @@ const bookController = {
         fields.title = title.trim();
       }
       if (author !== undefined) {
-        fields.author = typeof author === 'string' ? author.trim() : null;
+        fields.author = typeof author === 'string' && author.trim() !== '' ? author.trim() : null;
       }
       if (finished !== undefined) {
         if (typeof finished !== 'boolean') {
