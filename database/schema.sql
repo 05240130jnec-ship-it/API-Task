@@ -3,7 +3,7 @@
 
 USE defaultdb;
 
--- 1. Create the table (skipped if it already exists)
+-- 1. Create the table (skipped if it already exists IF NOT IT WILL CREAT NEW ONE )
 CREATE TABLE IF NOT EXISTS library_books (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
@@ -32,7 +32,7 @@ PREPARE stmt FROM @add_column;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- 3. Fill finished_at for books already marked finished
+-- 3. Fill finished_at for books already marked finished 
 --    (id > 0 uses the primary key, so it works in Workbench safe update mode)
 UPDATE library_books
 SET finished_at = updated_at
@@ -47,5 +47,5 @@ SELECT * FROM (
 ) AS seed_data
 WHERE NOT EXISTS (SELECT 1 FROM library_books LIMIT 1);
 
--- 5. Check the result
+-- 5. Check the result 
 SELECT * FROM library_books;

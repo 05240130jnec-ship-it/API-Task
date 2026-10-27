@@ -18,5 +18,6 @@ if ((process.env.DB_SSL || '').toUpperCase() === 'REQUIRED') {
   poolConfig.ssl = { rejectUnauthorized: false };
 }
 
+
 const pool = mysql2.createPool(poolConfig);
 module.exports = pool;
