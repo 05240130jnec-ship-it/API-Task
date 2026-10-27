@@ -18,16 +18,16 @@ const bookModel = {
 
   create: async ({ title, author, finished }) => {
     const [result] = await pool.query(
-      'INSERT INTO library_books (title, author, finished) VALUES (?, ?, ?)',
-      [title, author, finished]
+      'INSERT INTO library_books (title, author, finished, finished_at) VALUES (?, ?, ?, IF(?, NOW(), NULL))',
+      [title, author, finished, finished]
     );
     return bookModel.findById(result.insertId);
   },
 
   update: async (id, { title, author, finished }) => {
     const [result] = await pool.query(
-      'UPDATE library_books SET title = ?, author = ?, finished = ? WHERE id = ?',
-      [title, author, finished, id]
+      'UPDATE library_books SET title = ?, author = ?, finished = ?, finished_at = IF(?, COALESCE(finished_at, NOW()), NULL) WHERE id = ?',
+      [title, author, finished, finished, id]
     );
     if (result.affectedRows === 0) return null;
     return bookModel.findById(id);
@@ -41,6 +41,14 @@ const bookModel = {
         updates.push(`${key} = ?`);
         values.push(fields[key]);
       }
+    }
+    // Record when a book was finished, and clear it if it is marked unfinished
+    if (fields.finished !== undefined) {
+      updates.push(
+        fields.finished
+          ? 'finished_at = COALESCE(finished_at, NOW())'
+          : 'finished_at = NULL'
+      );
     }
     if (updates.length === 0) return bookModel.findById(id);
     values.push(id);
