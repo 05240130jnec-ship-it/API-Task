@@ -3,24 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book Library</title>
+  <title>Booknook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="container">
-    <h1>Book Library</h1>
+  <div class="app" id="app">
 
-    <div class="add-book">
-      <input type="text" id="titleInput" placeholder="Book title" maxlength="255">
-      <input type="text" id="authorInput" placeholder="Author" maxlength="255">
-      <button id="addBtn">Add</button>
-    </div>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="brand-name">Booknook</span>
+      </div>
 
-    <p id="message" class="message"></p>
+      <nav class="filters" aria-label="Filter books">
+        <button type="button" class="filter active" data-filter="all" aria-pressed="true">
+          <span>All books</span><span class="num" id="countAll">0</span>
+        </button>
+        <button type="button" class="filter" data-filter="unread" aria-pressed="false">
+          <span>To read</span><span class="num" id="countUnread">0</span>
+        </button>
+        <button type="button" class="filter" data-filter="finished" aria-pressed="false">
+          <span>Finished</span><span class="num" id="countFinished">0</span>
+        </button>
+      </nav>
 
-    <ul id="bookList"></ul>
-  </main>
+      <div class="goal">
+        <div class="ring">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="ring-track" cx="60" cy="60" r="48"></circle>
+            <circle class="ring-bar" id="ringBar" cx="60" cy="60" r="48"></circle>
+          </svg>
+          <span class="ring-pct" id="ringPct">0%</span>
+        </div>
+        <p class="goal-text" id="goalText">Add a book to begin</p>
+      </div>
 
+      <form id="addForm" class="quick-add" novalidate>
+        <h2>Add a book</h2>
+        <label class="sr-only" for="titleInput">Title</label>
+        <input type="text" id="titleInput" maxlength="255" placeholder="Title" autocomplete="off">
+        <label class="sr-only" for="authorInput">Author</label>
+        <input type="text" id="authorInput" maxlength="255" placeholder="Author" autocomplete="off">
+        <button type="submit" class="btn sun">Add to my shelf</button>
+        <p id="formMessage" class="form-message" role="alert"></p>
+      </form>
+    </aside>
+
+    <main class="main">
+      <header class="main-head">
+        <div>
+          <p class="hello" id="hello"></p>
+          <h1 id="viewTitle">All books</h1>
+        </div>
+        <div class="controls">
+          <div class="search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+            <input type="search" id="searchInput" placeholder="Search title or author" aria-label="Search books">
+          </div>
+          <select id="sortSelect" aria-label="Sort books">
+            <option value="newest">Newest first</option>
+            <option value="title">Title A to Z</option>
+            <option value="author">Author A to Z</option>
+            <option value="unfinished">To read first</option>
+          </select>
+        </div>
+      </header>
+
+      <p id="notice" class="notice" role="status" hidden></p>
+
+      <div id="bookGrid" class="grid"></div>
+    </main>
+
+    <aside class="detail" id="detail" aria-label="Book details" aria-hidden="true">
+      <div class="detail-inner">
+        <button type="button" class="icon-btn" id="closeDetail" aria-label="Close details">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+
+        <div class="detail-cover" id="detailCover">
+          <span class="cover-title"></span>
+          <span class="cover-author"></span>
+        </div>
+
+        <form id="editForm" novalidate>
+          <label for="editTitle">Title</label>
+          <input type="text" id="editTitle" maxlength="255" autocomplete="off">
+
+          <label for="editAuthor">Author</label>
+          <input type="text" id="editAuthor" maxlength="255" autocomplete="off">
+
+          <label class="switch" for="editFinished">
+            <input type="checkbox" id="editFinished">
+            <span class="track" aria-hidden="true"></span>
+            <span id="switchText">Not finished yet</span>
+          </label>
+
+          <p id="editMessage" class="form-message dark" role="alert"></p>
+
+          <button type="submit" class="btn primary">Save changes</button>
+          <button type="button" class="btn danger" id="deleteBtn">Remove book</button>
+        </form>
+      </div>
+    </aside>
+
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
   <script src="script.js"></script>
 </body>
 </html>
