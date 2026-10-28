@@ -1,5 +1,4 @@
 -- Book Library schema
--- Safe to run as many times as you like: it only creates or adds what is missing.
 
 USE defaultdb;
 

@@ -106,7 +106,7 @@ h1 { font-family: var(--display); font-weight: 800; font-size: clamp(2rem, 3.6vw
 .controls { display: flex; gap: 10px; flex-wrap: wrap; }
 .search { position: relative; }
 .search svg { position: absolute; left: 13px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
-.search input { padding: 11px 14px 11px 40px; width: 270px; }
+.controls .search input { padding: 11px 14px 11px 44px; width: 270px; }
 .controls input, .controls select, #editForm input[type='text'] {
   font: inherit; color: var(--ink); background: var(--surface);
   border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px;
