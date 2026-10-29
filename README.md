@@ -1,6 +1,6 @@
 # 📚 Booknook: Book Library API
 
-A REST API for managing a personal book library, built with **Node.js**, **Express** and **MySQL** (hosted on **Aiven**). It comes with a simple frontend, **Booknook**, for adding books, tracking what we've  finished and seeing your reading progress.
+A REST API for managing a personal book library, built with **Node.js**, **Express** and **MySQL** (hosted on **Aiven**). It comes with a simple frontend, **Booknook**, for adding books,and tracking 
 
 ## Features
 
@@ -205,13 +205,6 @@ To test the API:
 - **The Booknook frontend** at `http://localhost:3000`
 - **Browser**: open `http://localhost:3000/books` to see all books as JSON
 
-## Troubleshooting
 
-| Problem | Fix |
-|---------|-----|
-| `Title is required` even when a title is filled in | Make sure `app.use(express.json())` comes before the routes in `server.js` |
-| `Unknown column 'finished_at'` | Run `database/schema.sql` again; it adds the missing column |
-| `MySQL connection failed` | Check the values in `.env` and that `DB_SSL=REQUIRED` is set for Aiven |
-| Page shows `Cannot reach the server` | Start the backend with `npm run dev` |
 
 
